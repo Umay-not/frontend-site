@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { getSetting } from '../../backend-server/src/services/siteSettingsService.js';
-import { getContentBlocks } from '../../backend-server/src/services/admin/adminContentService.js';
+import { getSetting } from '@/services/settingsService';
+import { getContentBlocks } from '@/services/contentService';
 import './Footer.css';
 
 const Footer = () => {
@@ -12,20 +12,20 @@ const Footer = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [contactResult, socialResult, contentResult] = await Promise.all([
+                const [contactInfo, socialLinks, contentBlocks] = await Promise.all([
                     getSetting('contact_info'),
                     getSetting('social_links'),
                     getContentBlocks()
                 ]);
 
-                if (contactResult.success) {
-                    setContactInfo(contactResult.data);
+                if (contactInfo) {
+                    setContactInfo(contactInfo);
                 }
-                if (socialResult.success) {
-                    setSocialLinks(socialResult.data);
+                if (socialLinks) {
+                    setSocialLinks(socialLinks);
                 }
-                if (contentResult.success && contentResult.data?.logo?.url) {
-                    setLogoUrl(contentResult.data.logo.url);
+                if (contentBlocks?.logo?.url) {
+                    setLogoUrl(contentBlocks.logo.url);
                 }
             } catch (error) {
                 console.error('Error fetching footer data:', error);

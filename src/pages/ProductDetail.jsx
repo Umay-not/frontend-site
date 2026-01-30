@@ -5,8 +5,8 @@ import SizeMatrix from '../components/SizeMatrix';
 import ProductCard from '../components/ProductCard';
 import DeferredWrapper from '../components/Skeleton/DeferredWrapper';
 import ProductDetailSkeleton from '../components/Skeleton/ProductDetailSkeleton';
-import { getProductById, getAllProducts } from '../../backend-server/src/services/productService.js';
-import { getSettings } from '../../backend-server/src/services/siteSettingsService.js';
+import { getProductById, getAllProducts } from '@/services/productService';
+import { getSettings } from '@/services/settingsService';
 import './ProductDetail.css';
 
 const ProductDetail = () => {

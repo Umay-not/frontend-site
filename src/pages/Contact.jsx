@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getSetting } from '../../backend-server/src/services/siteSettingsService.js';
-import { sendContactMessage } from '../../backend-server/src/services/contactService.js';
+import { getSetting } from '@/services/settingsService';
+import { sendContactMessage } from '@/services/contactService';
 import './Contact.css';
 
 const Contact = () => {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getSettings } from '../../backend-server/src/services/siteSettingsService.js';
+import { getSettings } from '@/services/settingsService';
 import './About.css';
 
 const About = () => {

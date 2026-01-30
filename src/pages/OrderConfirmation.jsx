@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
-import { getOrderByNumber } from '../../backend-server/src/services/orderService.js';
+import { supabase } from '../lib/supabase';
 import './OrderConfirmation.css';
 
 const OrderConfirmation = () => {
@@ -38,15 +38,20 @@ const OrderConfirmation = () => {
             }
 
             // 3. Try API (For Authenticated Users / Admin)
-            const result = await getOrderByNumber(orderNumber);
-            if (result.success) {
-                setOrder(result.data);
+            const { data, error } = await supabase
+                .from('orders')
+                .select('*')
+                .eq('order_number', orderNumber)
+                .single();
+
+            if (data && !error) {
+                setOrder(data);
             } else {
                 // If we already have data from localStorage, ignore API error (likely RLS blocking)
                 // If we don't have data, show error
                 setOrder(prev => {
                     if (prev) return prev;
-                    setError(result.error || 'Sipariş bulunamadı');
+                    setError(error?.message || 'Sipariş bulunamadı');
                     return null;
                 });
             }

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { getUserOrders } from '../../backend-server/src/services/orderService.js';
+import { supabase } from '../lib/supabase';
 import './Account.css';
 
 const Account = () => {
@@ -38,9 +38,15 @@ const Account = () => {
             if (user && activeSection === 'orders') {
                 setOrdersLoading(true);
                 try {
-                    const result = await getUserOrders(user.id);
-                    if (result.success) {
-                        setOrders(result.data);
+                    const { data, error } = await supabase
+                        .from('orders')
+                        .select('*')
+                        .eq('user_id', user.id)
+                        .order('created_at', { ascending: false });
+
+                    if (error) throw error;
+                    if (data) {
+                        setOrders(data);
                     }
                 } catch (err) {
                     console.error('Error fetching orders:', err);

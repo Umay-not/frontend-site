@@ -4,8 +4,8 @@ import FilterSidebar from '../components/FilterSidebar/FilterSidebar';
 import ProductCard from '../components/ProductCard';
 import DeferredWrapper from '../components/Skeleton/DeferredWrapper';
 import CategorySkeleton from '../components/Skeleton/CategorySkeleton';
-import { getProductsByCategory, getAllProducts } from '../../backend-server/src/services/productService.js';
-import { getCategoryBySlug } from '../../backend-server/src/services/categoryService.js';
+import { getProductsByCategory, getAllProducts } from '@/services/productService';
+import { getCategoryBySlug } from '@/services/categoryService';
 import './Category.css';
 
 const Category = () => {

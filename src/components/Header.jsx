@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { getContentBlocks } from '../../backend-server/src/services/admin/adminContentService.js';
-import { getAllCategories } from '../../backend-server/src/services/categoryService.js';
+import { getContentBlocks } from '@/services/contentService';
+import { getAllCategories } from '@/services/categoryService';
 import './Header.css';
 
 const Header = () => {
@@ -19,9 +19,9 @@ const Header = () => {
   useEffect(() => {
     const fetchLogo = async () => {
       try {
-        const result = await getContentBlocks();
-        if (result.success && result.data?.logo?.url) {
-          setLogoUrl(result.data.logo.url);
+        const contentBlocks = await getContentBlocks();
+        if (contentBlocks?.logo?.url) {
+          setLogoUrl(contentBlocks.logo.url);
         }
       } catch (error) {
         console.warn('Logo fetch error:', error);
@@ -35,10 +35,10 @@ const Header = () => {
     const fetchCategories = async () => {
       setCategoriesLoading(true);
       try {
-        const result = await getAllCategories();
-        if (result.success && result.data) {
+        const categoriesData = await getAllCategories();
+        if (categoriesData) {
           // Backend'den gelen kategorileri Header formatına çevir
-          const formattedCategories = result.data.map(cat => ({
+          const formattedCategories = categoriesData.map(cat => ({
             name: cat.name.toUpperCase(),
             path: `/kategori/${cat.slug}`
           }));

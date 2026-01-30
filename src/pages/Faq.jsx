@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getAllFaqs } from '../../backend-server/src/services/faqService.js';
-import { getSetting } from '../../backend-server/src/services/siteSettingsService.js';
+import { getAllFaqs } from '@/services/faqService';
+import { getSetting } from '@/services/settingsService';
 import './Faq.css';
 
 const Faq = () => {

@@ -4,10 +4,10 @@ import ProductCard from '../components/ProductCard';
 import DeferredWrapper from '../components/Skeleton/DeferredWrapper';
 import HomeSkeleton from '../components/Skeleton/HomeSkeleton';
 import HeroSection from '../components/HeroSection';
-import { getAllProducts, getNewProducts } from '../../backend-server/src/services/productService.js';
-import { getAllCategories } from '../../backend-server/src/services/categoryService.js';
-import { getActiveContentBlocks } from '../../backend-server/src/services/admin/adminContentService.js';
-import { getSetting } from '../../backend-server/src/services/siteSettingsService.js';
+import { getAllProducts, getNewProducts } from '@/services/productService';
+import { getAllCategories } from '@/services/categoryService';
+import { getActiveContentBlocks } from '@/services/contentService';
+import { getSetting } from '@/services/settingsService';
 import './Home.css';
 
 const Home = () => {
@@ -37,7 +37,7 @@ const Home = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const [productsResult, categoriesResult, newProductsResult, contentResult, infoBannersResult] = await Promise.all([
+                const [products, categories, newProducts, contentBlocks, infoBanners] = await Promise.all([
                     getAllProducts(),
                     getAllCategories(),
                     getNewProducts(),
@@ -45,21 +45,21 @@ const Home = () => {
                     getSetting('home_info_banners')
                 ]);
 
-                if (productsResult.success) {
-                    setProducts(productsResult.data?.slice(0, 8) || []);
+                if (products) {
+                    setProducts(products?.slice(0, 8) || []);
                 }
-                if (categoriesResult.success) {
-                    setCategories(categoriesResult.data || []);
+                if (categories) {
+                    setCategories(categories || []);
                 }
-                if (newProductsResult.success) {
-                    setFeaturedProducts(newProductsResult.data?.slice(0, 4) || []);
+                if (newProducts) {
+                    setFeaturedProducts(newProducts?.slice(0, 4) || []);
                 }
-                if (contentResult.success) {
+                if (contentBlocks) {
 
-                    setSiteContent(contentResult.data || {});
+                    setSiteContent(contentBlocks || {});
                 }
-                if (infoBannersResult.success) {
-                    setInfoBanners(infoBannersResult.data || []);
+                if (infoBanners) {
+                    setInfoBanners(infoBanners || []);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
