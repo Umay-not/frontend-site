@@ -3,7 +3,7 @@
  * Frontend service for PayTR iFrame integration
  */
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://fiftyone-backend.onrender.com/api';
 
 /**
  * Get auth token from local storage

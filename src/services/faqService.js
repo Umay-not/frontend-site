@@ -2,7 +2,7 @@
  * FAQ Service - API calls for FAQs
  */
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://fiftyone-backend.onrender.com/api';
 
 /**
  * Get all FAQs
