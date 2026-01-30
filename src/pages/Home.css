@@ -1,0 +1,387 @@
+/* Hero Section styles moved to HeroSection.css */
+
+/* Section Styles */
+.section-title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-light);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+}
+
+.section-link {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    transition: color var(--transition-fast);
+}
+
+.section-link:hover {
+    color: var(--color-primary);
+}
+
+/* Categories Section */
+.categories {
+    padding: var(--spacing-3xl) var(--container-padding);
+}
+
+.categories .section-title {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+}
+
+.categories__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-md);
+}
+
+.category-card {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    background: linear-gradient(135deg, #1a1a1a 0%, #333 100%);
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    padding: var(--spacing-lg);
+}
+
+.category-card__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    transition: opacity var(--transition-normal);
+}
+
+.category-card:hover .category-card__overlay {
+    opacity: 0.8;
+}
+
+.category-card__name {
+    position: relative;
+    z-index: 1;
+    color: var(--color-secondary);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* New Arrivals & All Products */
+.new-arrivals,
+.all-products {
+    padding: var(--spacing-3xl) var(--container-padding);
+}
+
+.products-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-lg);
+}
+
+.products-row--4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* Promo Banner - Text Overlay Design */
+.promo-banner {
+    margin: var(--spacing-3xl) 0;
+    padding: 0 var(--container-padding);
+}
+
+.promo-banner__content {
+    display: block;
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 21 / 9;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+}
+
+.promo-banner__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+/* Gradient Overlay - Left Side */
+.promo-banner__overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    max-width: 550px;
+    background: linear-gradient(to right,
+            rgba(0, 0, 0, 0.88) 0%,
+            rgba(0, 0, 0, 0.75) 50%,
+            rgba(0, 0, 0, 0) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--spacing-3xl);
+    padding-right: var(--spacing-2xl);
+    color: var(--color-secondary);
+}
+
+.promo-banner__eyebrow {
+    display: inline-block;
+    width: fit-content;
+    font-size: 11px;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    background: rgba(255, 215, 0, 0.15);
+    padding: 8px 14px;
+    border-radius: 4px;
+    margin-bottom: var(--spacing-lg);
+}
+
+.promo-banner__title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.1;
+    margin-bottom: var(--spacing-md);
+    letter-spacing: -0.5px;
+}
+
+.promo-banner__text {
+    font-size: var(--font-size-base);
+    opacity: 0.85;
+    line-height: var(--line-height-relaxed);
+    margin-bottom: var(--spacing-xl);
+    max-width: 350px;
+}
+
+.promo-banner__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+    padding: 14px 28px;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: var(--color-secondary);
+    color: var(--color-primary);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-normal);
+}
+
+.promo-banner__btn:hover {
+    background: var(--color-accent);
+    color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.promo-banner__btn svg {
+    transition: transform var(--transition-fast);
+}
+
+.promo-banner__btn:hover svg {
+    transform: translateX(4px);
+}
+
+/* Info Banner */
+.info-banner {
+    background-color: var(--color-bg-dark);
+    color: var(--color-secondary);
+    padding: var(--spacing-3xl) 0;
+    margin: var(--spacing-3xl) 0;
+}
+
+.info-banner__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-xl);
+}
+
+.info-banner__item {
+    text-align: center;
+    padding: var(--spacing-lg);
+}
+
+.info-banner__icon {
+    margin-bottom: var(--spacing-md);
+    opacity: 0.8;
+}
+
+.info-banner__icon svg {
+    width: 40px;
+    height: 40px;
+}
+
+.info-banner__title {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--spacing-sm);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.info-banner__text {
+    font-size: var(--font-size-sm);
+    color: rgba(255, 255, 255, 0.7);
+    line-height: var(--line-height-relaxed);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+
+    .hero__content {
+        order: 2;
+        text-align: center;
+        align-items: center;
+    }
+
+    .hero__image {
+        order: 1;
+        aspect-ratio: 16 / 9;
+    }
+
+    .hero__cta {
+        flex-direction: column;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .categories__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .products-row {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .info-banner__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Promo banner responsive - tablet */
+    .promo-banner__content {
+        aspect-ratio: 16 / 9;
+    }
+
+    .promo-banner__overlay {
+        width: 60%;
+        max-width: 450px;
+        padding: var(--spacing-xl);
+    }
+
+    .promo-banner__title {
+        font-size: 1.75rem;
+    }
+
+    .promo-banner__text {
+        font-size: var(--font-size-sm);
+        max-width: 280px;
+    }
+
+    .promo-banner__btn {
+        padding: 12px 22px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero__content {
+        padding: var(--spacing-xl);
+    }
+
+    .hero__title {
+        font-size: var(--font-size-3xl);
+    }
+
+    .products-row {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+
+    .info-banner__grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+
+    .info-banner__item {
+        display: flex;
+        align-items: center;
+        text-align: left;
+        gap: var(--spacing-md);
+    }
+
+    .info-banner__icon {
+        margin-bottom: 0;
+        flex-shrink: 0;
+    }
+
+    /* Promo banner responsive - mobile */
+    .promo-banner__content {
+        aspect-ratio: 4 / 3;
+    }
+
+    .promo-banner__overlay {
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: auto;
+        width: 100%;
+        max-width: none;
+        padding: var(--spacing-lg);
+        background: linear-gradient(to top,
+                rgba(0, 0, 0, 0.95) 0%,
+                rgba(0, 0, 0, 0.8) 60%,
+                rgba(0, 0, 0, 0) 100%);
+    }
+
+    .promo-banner__eyebrow {
+        font-size: 10px;
+        padding: 6px 10px;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .promo-banner__title {
+        font-size: 1.25rem;
+    }
+
+    .promo-banner__text {
+        font-size: var(--font-size-sm);
+        max-width: none;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .promo-banner__btn {
+        padding: 10px 18px;
+        font-size: 12px;
+    }
+
+    .promo-banner__btn svg {
+        width: 14px;
+        height: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .categories__grid {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-sm);
+    }
+
+    .category-card {
+        aspect-ratio: 1;
+    }
+}

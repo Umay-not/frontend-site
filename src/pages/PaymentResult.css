@@ -1,0 +1,63 @@
+.payment-result {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 0;
+}
+
+.payment-result__loading,
+.payment-result__success,
+.payment-result__error {
+    text-align: center;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.payment-result svg {
+    margin-bottom: 1.5rem;
+}
+
+.payment-result h1 {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.payment-result p {
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.payment-result__success p strong {
+    color: #28a745;
+    font-weight: 600;
+}
+
+.payment-result .btn {
+    margin-top: 1.5rem;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #333;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

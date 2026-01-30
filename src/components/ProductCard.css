@@ -1,0 +1,195 @@
+.product-card {
+    position: relative;
+}
+
+/* Image Wrapper - Contains both image and quick add button */
+.product-card__image-wrapper {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Image Container */
+.product-card__image-container {
+    display: block;
+    position: relative;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    background-color: var(--color-bg-secondary);
+}
+
+.product-card__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.product-card__image.active {
+    opacity: 1;
+}
+
+.product-card__image--hover {
+    z-index: 1;
+}
+
+/* Badges */
+.product-card__badges {
+    position: absolute;
+    top: var(--spacing-md);
+    left: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    z-index: 2;
+}
+
+.badge {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-new {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+}
+
+.badge-outofstock {
+    background-color: var(--color-text-muted);
+    color: var(--color-secondary);
+}
+
+/* Quick Add - Now positioned inside image wrapper */
+.product-card__quick-add {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--spacing-md);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 60%, transparent 100%);
+    opacity: 0;
+    transform: translateY(100%);
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.product-card__quick-add.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.product-card__add-btn {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-xs);
+    background: #fff;
+    color: #000;
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease;
+}
+
+.product-card__add-btn:hover {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+/* Product Info */
+.product-card__info {
+    padding: var(--spacing-md) 0;
+}
+
+.product-card__name {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-text);
+    margin-bottom: var(--spacing-xs);
+    line-height: var(--line-height-tight);
+
+    /* Truncate long names */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.product-card__name:hover {
+    color: var(--color-text-muted);
+}
+
+.product-card__pricing {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-xs);
+}
+
+.product-card__price {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+}
+
+.product-card__series-info {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-muted);
+}
+
+.product-card__unit-price {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-light);
+}
+
+/* Color Swatches */
+.product-card__colors {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-sm);
+}
+
+.product-card__color-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    cursor: pointer;
+    transition: transform var(--transition-fast);
+}
+
+.product-card__color-swatch:hover {
+    transform: scale(1.2);
+}
+
+.product-card__color-swatch.active {
+    border: 2px solid var(--color-primary);
+}
+
+.product-card__color-count {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-light);
+    margin-left: var(--spacing-xs);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .product-card__quick-add {
+        display: none;
+    }
+
+    .product-card__name {
+        font-size: var(--font-size-xs);
+    }
+
+    .product-card__price {
+        font-size: var(--font-size-sm);
+    }
+}

@@ -1,0 +1,92 @@
+/* Skeleton Base Styles */
+.skeleton {
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0) 0,
+            rgba(255, 255, 255, 0.2) 20%,
+            rgba(255, 255, 255, 0.5) 60%,
+            rgba(255, 255, 255, 0));
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Product Skeleton Specifics */
+.product-skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.product-skeleton__image {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: 0;
+    /* Product images are usually sharp or have specific radius */
+}
+
+.product-skeleton__info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.product-skeleton__text {
+    height: 14px;
+    width: 80%;
+}
+
+.product-skeleton__price {
+    height: 16px;
+    width: 40%;
+}
+
+.product-skeleton__meta {
+    height: 12px;
+    width: 60%;
+    margin-top: 4px;
+}
+
+/* Wrapper to maintain layout */
+.skeleton-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    width: 100%;
+}
+
+@media (max-width: 1024px) {
+    .skeleton-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .skeleton-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Deferred Loader */
+.deferred-loading-placeholder {
+    width: 100%;
+    min-height: 50vh;
+    /* Keep the footer pushed down initially */
+}
