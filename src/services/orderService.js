@@ -1,16 +1,27 @@
-import { supabase } from '../lib/supabase';
+/**
+ * Order Service - API calls for orders
+ */
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 /**
- * Benzersiz sipariş numarası oluştur
- * @returns {string}
+ * Get auth token from Supabase session
  */
-const generateOrderNumber = () => {
-    const date = new Date();
-    const year = date.getFullYear().toString().slice(-2);
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-    const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-    return `TRF${year}${month}${day}-${random}`;
+const getAuthToken = () => {
+    try {
+        // Try to get token from Supabase session storage
+        const keys = Object.keys(localStorage).filter(k => k.startsWith('sb-') && k.endsWith('-auth-token'));
+        if (keys.length > 0) {
+            const stored = localStorage.getItem(keys[0]);
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                return parsed?.access_token;
+            }
+        }
+    } catch (e) {
+        console.error('Token parse error:', e);
+    }
+    return null;
 };
 
 /**
@@ -25,80 +36,70 @@ export const createOrder = async (orderData) => {
             return { success: false, error: 'Eksik sipariş bilgisi' };
         }
 
-        // Toplam hesapla
-        const subtotal = orderData.items.reduce((sum, item) => {
-            return sum + (item.totalQty * item.product.price);
-        }, 0);
-        const shippingCost = subtotal >= 2000 ? 0 : 150;
-        const total = subtotal + shippingCost;
+        const token = getAuthToken();
 
-        const orderNumber = generateOrderNumber();
-        const orderId = crypto.randomUUID(); // Client-side ID generation
-
-        // Sipariş oluştur
-        const { error: orderError } = await supabase
-            .from('orders')
-            .insert({
-                id: orderId,
-                order_number: orderNumber,
-                user_id: orderData.userId, // RLS should validate this matches auth.uid()
-                customer_first_name: orderData.customer.firstName,
-                customer_last_name: orderData.customer.lastName,
-                customer_email: orderData.customer.email,
-                customer_phone: orderData.customer.phone,
-                company_name: orderData.customer.companyName || null,
-                tax_number: orderData.customer.taxNumber || null,
-                tax_office: orderData.customer.taxOffice || null,
-                shipping_address: orderData.customer.address,
-                shipping_city: orderData.customer.city,
-                shipping_district: orderData.customer.district,
-                shipping_postal_code: orderData.customer.postalCode || null,
-                subtotal,
-                shipping_cost: shippingCost,
-                total,
-                payment_method: orderData.paymentMethod,
-                status: 'pending'
-            });
-
-        if (orderError) throw orderError;
-
-        // Sipariş kalemlerini ekle - Her beden için ayrı satır oluştur
+        // Build order items for backend
         const orderItems = [];
         for (const item of orderData.items) {
             const colorName = item.product.colors?.[item.colorIndex]?.name || 'Standart';
 
-            // Her beden için ayrı order_item kaydı oluştur
+            // Her beden için ayrı order_item
             Object.entries(item.quantities || {})
                 .filter(([_, qty]) => qty > 0)
                 .forEach(([size, qty]) => {
                     orderItems.push({
-                        order_id: orderId,
-                        product_id: item.product.id,
-                        product_name: item.product.name,
-                        color_name: colorName,
-                        size: size,  // Tek beden (ör: "S")
-                        quantity: qty,  // O bedene ait adet (ör: 5)
-                        unit_price: item.product.price,
-                        subtotal: qty * item.product.price
+                        productId: item.product.id,
+                        productName: item.product.name,
+                        colorName: colorName,
+                        size: size,
+                        quantity: qty,
+                        unitPrice: item.product.price
                     });
                 });
         }
 
-        const { error: itemsError } = await supabase
-            .from('order_items')
-            .insert(orderItems);
+        const requestBody = {
+            customer: {
+                firstName: orderData.customer.firstName,
+                lastName: orderData.customer.lastName,
+                email: orderData.customer.email,
+                phone: orderData.customer.phone,
+                companyName: orderData.customer.companyName || null,
+                taxNumber: orderData.customer.taxNumber || null,
+                taxOffice: orderData.customer.taxOffice || null,
+                address: orderData.customer.address,
+                city: orderData.customer.city,
+                district: orderData.customer.district,
+                postalCode: orderData.customer.postalCode || null
+            },
+            items: orderItems,
+            paymentMethod: orderData.paymentMethod
+        };
 
-        if (itemsError) {
-            console.error('Order items insert error:', itemsError);
-            // Consider rollback or alert logic here
+        const response = await fetch(`${API_URL}/orders`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(token && { 'Authorization': `Bearer ${token}` })
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                error: data.error || data.message || 'Sipariş oluşturulamadı'
+            };
         }
 
         return {
             success: true,
             data: {
-                id: orderId,
-                orderNumber: orderNumber,
-                // ... return other data if needed by frontend
+                id: data.data?.id,
+                orderNumber: data.data?.orderNumber,
+                total: data.data?.total
             }
         };
     } catch (error) {
@@ -107,6 +108,76 @@ export const createOrder = async (orderData) => {
     }
 };
 
+/**
+ * Get user orders
+ */
+export const getUserOrders = async () => {
+    try {
+        const token = getAuthToken();
+
+        if (!token) {
+            return { success: false, error: 'Oturum açmanız gerekiyor' };
+        }
+
+        const response = await fetch(`${API_URL}/orders/my-orders`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                error: data.error || 'Siparişler getirilemedi'
+            };
+        }
+
+        return {
+            success: true,
+            data: data.data || []
+        };
+    } catch (error) {
+        console.error('getUserOrders error:', error);
+        return { success: false, error: error.message };
+    }
+};
+
+/**
+ * Get order by ID
+ */
+export const getOrderById = async (orderId) => {
+    try {
+        const token = getAuthToken();
+
+        const response = await fetch(`${API_URL}/orders/${orderId}`, {
+            headers: {
+                ...(token && { 'Authorization': `Bearer ${token}` })
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            return {
+                success: false,
+                error: data.error || 'Sipariş bulunamadı'
+            };
+        }
+
+        return {
+            success: true,
+            data: data.data
+        };
+    } catch (error) {
+        console.error('getOrderById error:', error);
+        return { success: false, error: error.message };
+    }
+};
+
 export default {
-    createOrder
+    createOrder,
+    getUserOrders,
+    getOrderById
 };
