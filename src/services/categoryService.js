@@ -16,7 +16,7 @@ export const getAllCategories = async () => {
             throw new Error(data.error || 'Failed to fetch categories');
         }
 
-        return data.data || [];
+        return data;
     } catch (error) {
         console.error('Get all categories error:', error);
         throw error;
@@ -35,7 +35,7 @@ export const getCategoryBySlug = async (slug) => {
             throw new Error(data.error || 'Failed to fetch category');
         }
 
-        return data.data;
+        return data;
     } catch (error) {
         console.error('Get category by slug error:', error);
         throw error;

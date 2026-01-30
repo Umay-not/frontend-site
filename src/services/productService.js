@@ -27,7 +27,7 @@ export const getAllProducts = async (params = {}) => {
             throw new Error(data.error || 'Failed to fetch products');
         }
 
-        return data.data || [];
+        return data;
     } catch (error) {
         console.error('Get all products error:', error);
         throw error;
@@ -46,7 +46,7 @@ export const getNewProducts = async (limit = 8) => {
             throw new Error(data.error || 'Failed to fetch new products');
         }
 
-        return data.data || [];
+        return data;
     } catch (error) {
         console.error('Get new products error:', error);
         throw error;
@@ -71,7 +71,7 @@ export const getProductsByCategory = async (slug, params = {}) => {
             throw new Error(data.error || 'Failed to fetch products');
         }
 
-        return data.data || [];
+        return data;
     } catch (error) {
         console.error('Get products by category error:', error);
         throw error;
@@ -90,7 +90,7 @@ export const getProductById = async (id) => {
             throw new Error(data.error || 'Failed to fetch product');
         }
 
-        return data.data;
+        return data;
     } catch (error) {
         console.error('Get product by ID error:', error);
         throw error;
@@ -109,7 +109,7 @@ export const searchProducts = async (query, limit = 20) => {
             throw new Error(data.error || 'Failed to search products');
         }
 
-        return data.data || [];
+        return data;
     } catch (error) {
         console.error('Search products error:', error);
         throw error;

@@ -6,7 +6,7 @@ import ProductCard from '../components/ProductCard';
 import DeferredWrapper from '../components/Skeleton/DeferredWrapper';
 import ProductDetailSkeleton from '../components/Skeleton/ProductDetailSkeleton';
 import { getProductById, getAllProducts } from '@/services/productService';
-import { getSettings } from '@/services/settingsService';
+import { getAllSettings as getSettings } from '@/services/settingsService';
 import './ProductDetail.css';
 
 const ProductDetail = () => {
@@ -41,7 +41,7 @@ const ProductDetail = () => {
                     // Fetch related products and product info
                     const [allProductsResult, infoResult] = await Promise.all([
                         getAllProducts(),
-                        getSettings(['product_care_info', 'shipping_details', 'return_policy'])
+                        getSettings()
                     ]);
 
                     if (allProductsResult.success) {

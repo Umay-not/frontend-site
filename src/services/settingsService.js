@@ -16,7 +16,7 @@ export const getAllSettings = async () => {
             throw new Error(data.error || 'Failed to fetch settings');
         }
 
-        return data.data || {};
+        return data;
     } catch (error) {
         console.error('Get all settings error:', error);
         throw error;
@@ -35,7 +35,7 @@ export const getSetting = async (key) => {
             throw new Error(data.error || 'Failed to fetch setting');
         }
 
-        return data.data;
+        return data;
     } catch (error) {
         console.error('Get setting error:', error);
         throw error;

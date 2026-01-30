@@ -144,7 +144,8 @@ const Category = () => {
                     // Bu kategorinin ürünleri
                     const productsResult = await getProductsByCategory(slug);
                     if (productsResult.success) {
-                        setProducts(productsResult.data || []);
+                        // Check if it's a category endpoint response with products array
+                        setProducts(productsResult.data?.products || productsResult.data || []);
                     }
                 } else {
                     // Tüm ürünler
@@ -155,6 +156,7 @@ const Category = () => {
                 }
             } catch (error) {
                 console.error('Error fetching category data:', error);
+                setProducts([]);
             } finally {
                 setLoading(false);
             }

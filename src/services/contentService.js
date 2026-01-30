@@ -16,7 +16,7 @@ export const getActiveContentBlocks = async () => {
             throw new Error(data.error || 'Failed to fetch content blocks');
         }
 
-        return data.data || {};
+        return data;
     } catch (error) {
         console.error('Get active content blocks error:', error);
         throw error;

@@ -19,9 +19,9 @@ const Header = () => {
   useEffect(() => {
     const fetchLogo = async () => {
       try {
-        const contentBlocks = await getContentBlocks();
-        if (contentBlocks?.logo?.url) {
-          setLogoUrl(contentBlocks.logo.url);
+        const result = await getContentBlocks();
+        if (result?.success && result.data?.logo?.url) {
+          setLogoUrl(result.data.logo.url);
         }
       } catch (error) {
         console.warn('Logo fetch error:', error);
@@ -35,10 +35,10 @@ const Header = () => {
     const fetchCategories = async () => {
       setCategoriesLoading(true);
       try {
-        const categoriesData = await getAllCategories();
-        if (categoriesData) {
+        const result = await getAllCategories();
+        if (result?.success && result.data) {
           // Backend'den gelen kategorileri Header formatına çevir
-          const formattedCategories = categoriesData.map(cat => ({
+          const formattedCategories = result.data.map(cat => ({
             name: cat.name.toUpperCase(),
             path: `/kategori/${cat.slug}`
           }));

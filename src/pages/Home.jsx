@@ -37,7 +37,7 @@ const Home = () => {
         const fetchData = async () => {
             setLoading(true);
             try {
-                const [products, categories, newProducts, contentBlocks, infoBanners] = await Promise.all([
+                const [productsResult, categoriesResult, newProductsResult, contentBlocksResult, infoBannersResult] = await Promise.all([
                     getAllProducts(),
                     getAllCategories(),
                     getNewProducts(),
@@ -45,21 +45,20 @@ const Home = () => {
                     getSetting('home_info_banners')
                 ]);
 
-                if (products) {
-                    setProducts(products?.slice(0, 8) || []);
+                if (productsResult?.success) {
+                    setProducts(productsResult.data?.slice(0, 8) || []);
                 }
-                if (categories) {
-                    setCategories(categories || []);
+                if (categoriesResult?.success) {
+                    setCategories(categoriesResult.data || []);
                 }
-                if (newProducts) {
-                    setFeaturedProducts(newProducts?.slice(0, 4) || []);
+                if (newProductsResult?.success) {
+                    setFeaturedProducts(newProductsResult.data?.slice(0, 4) || []);
                 }
-                if (contentBlocks) {
-
-                    setSiteContent(contentBlocks || {});
+                if (contentBlocksResult?.success) {
+                    setSiteContent(contentBlocksResult.data || {});
                 }
-                if (infoBanners) {
-                    setInfoBanners(infoBanners || []);
+                if (infoBannersResult?.success) {
+                    setInfoBanners(infoBannersResult.data?.value || []);
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
