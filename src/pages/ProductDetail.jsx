@@ -117,8 +117,8 @@ const ProductDetail = () => {
                 <nav className="breadcrumb">
                     <Link to="/">Ana Sayfa</Link>
                     <span className="breadcrumb__separator">/</span>
-                    <Link to={`/kategori/${product.category}`}>
-                        {product.category?.charAt(0).toUpperCase() + product.category?.slice(1)}
+                    <Link to={`/kategori/${product.category?.slug || product.categoryId || 'kazak'}`}>
+                        {product.category?.name || product.categoryId || 'Ürünler'}
                     </Link>
                     <span className="breadcrumb__separator">/</span>
                     <span className="breadcrumb__current">{product.name}</span>

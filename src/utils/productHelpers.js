@@ -51,6 +51,7 @@ export const formatProductForCard = (product) => {
         seriesCount: SERIES_COUNT,
         images: images,
         colors: product.colors || [],
+        sizes: product.sizes || ['S', 'M', 'L', 'XL'],
         isNew: product.isNew || product.is_new || false,
         inStock: product.inStock !== undefined ? product.inStock : (product.in_stock !== undefined ? product.in_stock : true),
         category: product.category,
