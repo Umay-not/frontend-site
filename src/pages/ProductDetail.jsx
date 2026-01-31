@@ -7,6 +7,7 @@ import DeferredWrapper from '../components/Skeleton/DeferredWrapper';
 import ProductDetailSkeleton from '../components/Skeleton/ProductDetailSkeleton';
 import { getProductById, getAllProducts } from '@/services/productService';
 import { getAllSettings as getSettings } from '@/services/settingsService';
+import { formatProductForCard, formatProductsForCards } from '@/utils/productHelpers';
 import './ProductDetail.css';
 
 const ProductDetail = () => {
@@ -36,7 +37,7 @@ const ProductDetail = () => {
                 const productResult = await getProductById(id);
 
                 if (productResult.success && productResult.data) {
-                    setProduct(productResult.data);
+                    setProduct(formatProductForCard(productResult.data));
 
                     // Fetch related products and product info
                     const [allProductsResult, infoResult] = await Promise.all([
@@ -45,7 +46,7 @@ const ProductDetail = () => {
                     ]);
 
                     if (allProductsResult.success) {
-                        const related = allProductsResult.data
+                        const related = formatProductsForCards(allProductsResult.data)
                             .filter(p => p.id !== parseInt(id))
                             .slice(0, 4);
                         setRelatedProducts(related);

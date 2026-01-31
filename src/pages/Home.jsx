@@ -8,6 +8,7 @@ import { getAllProducts, getNewProducts } from '@/services/productService';
 import { getAllCategories } from '@/services/categoryService';
 import { getActiveContentBlocks } from '@/services/contentService';
 import { getSetting } from '@/services/settingsService';
+import { formatProductsForCards } from '@/utils/productHelpers';
 import './Home.css';
 
 const Home = () => {
@@ -46,13 +47,13 @@ const Home = () => {
                 ]);
 
                 if (productsResult?.success) {
-                    setProducts(productsResult.data?.slice(0, 8) || []);
+                    setProducts(formatProductsForCards(productsResult.data)?.slice(0, 8) || []);
                 }
                 if (categoriesResult?.success) {
                     setCategories(categoriesResult.data || []);
                 }
                 if (newProductsResult?.success) {
-                    setFeaturedProducts(newProductsResult.data?.slice(0, 4) || []);
+                    setFeaturedProducts(formatProductsForCards(newProductsResult.data)?.slice(0, 4) || []);
                 }
                 if (contentBlocksResult?.success) {
                     setSiteContent(contentBlocksResult.data || {});

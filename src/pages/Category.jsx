@@ -6,6 +6,7 @@ import DeferredWrapper from '../components/Skeleton/DeferredWrapper';
 import CategorySkeleton from '../components/Skeleton/CategorySkeleton';
 import { getProductsByCategory, getAllProducts } from '@/services/productService';
 import { getCategoryBySlug } from '@/services/categoryService';
+import { formatProductsForCards } from '@/utils/productHelpers';
 import './Category.css';
 
 const Category = () => {
@@ -145,13 +146,14 @@ const Category = () => {
                     const productsResult = await getProductsByCategory(slug);
                     if (productsResult.success) {
                         // Check if it's a category endpoint response with products array
-                        setProducts(productsResult.data?.products || productsResult.data || []);
+                        const rawProducts = productsResult.data?.products || productsResult.data || [];
+                        setProducts(formatProductsForCards(rawProducts));
                     }
                 } else {
                     // Tüm ürünler
                     const productsResult = await getAllProducts();
                     if (productsResult.success) {
-                        setProducts(productsResult.data || []);
+                        setProducts(formatProductsForCards(productsResult.data) || []);
                     }
                 }
             } catch (error) {
