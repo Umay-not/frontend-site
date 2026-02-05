@@ -38,20 +38,61 @@ const OrderConfirmation = () => {
             }
 
             // 3. Try API (For Authenticated Users / Admin)
-            const { data, error } = await supabase
+            const { data, error: fetchError } = await supabase
                 .from('orders')
-                .select('*')
+                .select('*, order_items(*)')
                 .eq('order_number', orderNumber)
-                .single();
+                .maybeSingle();
 
-            if (data && !error) {
-                setOrder(data);
-            } else {
+            if (fetchError) {
+                console.error('Order fetch error:', fetchError);
                 // If we already have data from localStorage, ignore API error (likely RLS blocking)
-                // If we don't have data, show error
                 setOrder(prev => {
                     if (prev) return prev;
-                    setError(error?.message || 'Sipariş bulunamadı');
+                    setError('Sipariş bilgilerine erişilemiyor. Lütfen giriş yaptığınızdan emin olun.');
+                    return null;
+                });
+            } else if (data) {
+                // Transform snake_case to camelCase for template compatibility
+                const transformedOrder = {
+                    id: data.id,
+                    orderNumber: data.order_number,
+                    status: data.status,
+                    paymentMethod: data.payment_method,
+                    subtotal: parseFloat(data.subtotal || 0),
+                    shippingCost: parseFloat(data.shipping_cost || 0),
+                    total: parseFloat(data.total || 0),
+                    customer: {
+                        firstName: data.customer_first_name,
+                        lastName: data.customer_last_name,
+                        email: data.customer_email,
+                        phone: data.customer_phone,
+                        companyName: data.company_name
+                    },
+                    shippingAddress: {
+                        address: data.shipping_address,
+                        city: data.shipping_city,
+                        district: data.shipping_district,
+                        postalCode: data.postal_code
+                    },
+                    items: data.order_items?.map(item => ({
+                        productName: item.product_name,
+                        color: item.color_name || item.color,
+                        size: item.size,
+                        quantity: item.quantity,
+                        unitPrice: parseFloat(item.unit_price || 0),
+                        subtotal: parseFloat(item.subtotal || item.total_price || 0)
+                    })) || [],
+                    trackingNumber: data.tracking_number,
+                    trackingCompany: data.tracking_company,
+                    createdAt: data.created_at
+                };
+                setOrder(transformedOrder);
+            } else {
+                // No data found and no localStorage fallback
+                setOrder(prev => {
+                    if (prev) return prev;
+                    setError('Sipariş bulunamadı');
                     return null;
                 });
             }

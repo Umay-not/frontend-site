@@ -40,13 +40,27 @@ const Account = () => {
                 try {
                     const { data, error } = await supabase
                         .from('orders')
-                        .select('*')
+                        .select('*, order_items(*)')
                         .eq('user_id', user.id)
                         .order('created_at', { ascending: false });
 
                     if (error) throw error;
                     if (data) {
-                        setOrders(data);
+                        // Transform snake_case to camelCase for template
+                        const transformedOrders = data.map(order => ({
+                            id: order.id,
+                            orderNumber: order.order_number,
+                            status: order.status,
+                            total: parseFloat(order.total || 0),
+                            createdAt: order.created_at,
+                            trackingNumber: order.tracking_number,
+                            shippingCarrier: order.shipping_carrier || order.tracking_company,
+                            items: order.order_items?.map(item => ({
+                                productName: item.product_name,
+                                quantity: item.quantity
+                            })) || []
+                        }));
+                        setOrders(transformedOrders);
                     }
                 } catch (err) {
                     console.error('Error fetching orders:', err);
