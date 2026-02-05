@@ -70,6 +70,20 @@ const Checkout = () => {
         setIsSubmitting(true);
 
         try {
+            // Transform cart items to backend format (separate item per size)
+            const orderItems = cartItems.flatMap(item => {
+                const colorName = item.product.colors?.[item.colorIndex]?.name || 'Standart';
+
+                return Object.entries(item.quantities || {})
+                    .filter(([_, qty]) => qty > 0)
+                    .map(([size, qty]) => ({
+                        productId: item.product.id,
+                        quantity: qty,
+                        size: size,
+                        color: colorName
+                    }));
+            });
+
             // 1. Siparişi oluştur (Pending durumda)
             const result = await createOrder({
                 userId: user.id,
@@ -86,7 +100,7 @@ const Checkout = () => {
                     district: formData.district,
                     postalCode: formData.postalCode
                 },
-                items: cartItems,
+                items: orderItems,  // Use transformed items
                 paymentMethod: formData.paymentMethod
             });
 
