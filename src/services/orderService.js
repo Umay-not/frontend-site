@@ -38,29 +38,28 @@ export const createOrder = async (orderData) => {
 
         const token = getAuthToken();
 
-        // Build order items for backend
-        const orderItems = [];
-        for (const item of orderData.items) {
-            if (!item.product) {
-                console.warn('Skipping item with missing product data:', item);
-                continue;
+        // Items are already transformed by Checkout.jsx
+        // Each item has: productId, quantity, size, color
+        // Just validate and pass through
+        const orderItems = orderData.items.filter(item => {
+            if (!item.productId || !item.quantity || item.quantity <= 0) {
+                console.warn('Skipping invalid order item:', item);
+                return false;
             }
-            const colorName = item.product.colors?.[item.colorIndex]?.name || 'Standart';
+            return true;
+        }).map(item => ({
+            productId: item.productId,
+            productName: item.productName || null,
+            colorName: item.color || 'Standart',
+            size: item.size || 'Standart',
+            quantity: item.quantity,
+            unitPrice: item.unitPrice || null
+        }));
 
-            // Her beden için ayrı order_item
-            Object.entries(item.quantities || {})
-                .filter(([_, qty]) => qty > 0)
-                .forEach(([size, qty]) => {
-                    orderItems.push({
-                        productId: item.product.id,
-                        productName: item.product.name,
-                        colorName: colorName,
-                        size: size,
-                        quantity: qty,
-                        unitPrice: item.product.price
-                    });
-                });
+        if (orderItems.length === 0) {
+            return { success: false, error: 'Geçerli sipariş öğesi bulunamadı' };
         }
+
 
         const requestBody = {
             customer: {
