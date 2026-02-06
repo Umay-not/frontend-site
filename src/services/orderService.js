@@ -41,6 +41,10 @@ export const createOrder = async (orderData) => {
         // Build order items for backend
         const orderItems = [];
         for (const item of orderData.items) {
+            if (!item.product) {
+                console.warn('Skipping item with missing product data:', item);
+                continue;
+            }
             const colorName = item.product.colors?.[item.colorIndex]?.name || 'Standart';
 
             // Her beden için ayrı order_item
