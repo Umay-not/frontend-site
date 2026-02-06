@@ -202,21 +202,25 @@
     display: flex;
     align-items: baseline;
     gap: var(--spacing-sm);
+    flex-wrap: wrap;
 }
 
 .product-info__total-label {
     font-size: var(--font-size-sm);
     color: var(--color-text-muted);
+    white-space: nowrap;
 }
 
 .product-info__total-value {
     font-size: var(--font-size-xl);
     font-weight: var(--font-weight-bold);
+    white-space: nowrap;
 }
 
 .product-info__total-qty {
     font-size: var(--font-size-sm);
     color: var(--color-text-light);
+    white-space: nowrap;
 }
 
 .product-info__add-btn {

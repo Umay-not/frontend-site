@@ -40,15 +40,33 @@ export const groupImagesByColor = (images) => {
 export const formatProductForCard = (product) => {
     if (!product) return null;
 
-    const images = groupImagesByColor(product.images);
-    const seriesPrice = Math.round((product.price || 0) * SERIES_COUNT);
+    // Handle images - backend may return:
+    // 1. Already grouped 2D array: [[url1, url2], [url3]]
+    // 2. Flat array of objects: [{url, colorCode}, ...]
+    // 3. Flat array of strings: [url1, url2]
+    let images;
+
+    if (!product.images || product.images.length === 0) {
+        images = [['/images/placeholder.png']];
+    } else if (Array.isArray(product.images[0]) && typeof product.images[0][0] === 'string') {
+        // Already grouped 2D array from backend - use directly
+        images = product.images;
+    } else if (typeof product.images[0] === 'string') {
+        // Flat array of strings - wrap in array
+        images = [product.images];
+    } else {
+        // Flat array of objects - needs grouping
+        images = groupImagesByColor(product.images);
+    }
+
+    const seriesPrice = product.seriesPrice || Math.round((product.price || 0) * SERIES_COUNT);
 
     return {
         id: product.id,
         name: product.name,
         price: product.price,
         seriesPrice: seriesPrice,
-        seriesCount: SERIES_COUNT,
+        seriesCount: product.seriesCount || SERIES_COUNT,
         images: images,
         colors: product.colors || [],
         sizes: product.sizes || ['S', 'M', 'L', 'XL'],
