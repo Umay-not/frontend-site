@@ -25,8 +25,10 @@ const ChatWidget = () => {
     });
     const [inputValue, setInputValue] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [pendingMessageId, setPendingMessageId] = useState(null);
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
+    const pollingRef = useRef(null);
 
     // Save messages to localStorage whenever they change
     useEffect(() => {
@@ -68,7 +70,40 @@ const ChatWidget = () => {
         }
     }, [isOpen]);
 
+    // Polling for pending message response (admin approval or auto-approval)
+    useEffect(() => {
+        if (pendingMessageId) {
+            pollingRef.current = setInterval(async () => {
+                const result = await checkResponseStatus(pendingMessageId);
 
+                if (result.success && result.data) {
+                    const { status, content } = result.data;
+
+                    if (status === 'approved' || status === 'edited') {
+                        // Response approved - update with edited content
+                        setMessages(prev => prev.map(msg =>
+                            msg.id === pendingMessageId
+                                ? { ...msg, content, status: 'approved', pending: false }
+                                : msg
+                        ));
+                        setPendingMessageId(null);
+                        clearInterval(pollingRef.current);
+                    } else if (status === 'rejected') {
+                        // Response rejected - remove pending message
+                        setMessages(prev => prev.filter(msg => msg.id !== pendingMessageId));
+                        setPendingMessageId(null);
+                        clearInterval(pollingRef.current);
+                    }
+                }
+            }, 3000); // Poll every 3 seconds
+
+            return () => {
+                if (pollingRef.current) {
+                    clearInterval(pollingRef.current);
+                }
+            };
+        }
+    }, [pendingMessageId]);
 
     const loadConversation = async () => {
         const result = await getConversation();
@@ -104,15 +139,17 @@ const ChatWidget = () => {
         try {
             const result = await askQuestion(message);
 
-            if (result.success && result.data.content) {
-                // Add AI response immediately
+            if (result.success) {
+                // Add pending AI message - will be updated when approved
                 const aiMessage = {
                     id: result.data.messageId,
                     type: 'ai',
-                    content: result.data.content,
+                    content: 'Cevabınız hazırlanıyor...',
+                    pending: true,
                     createdAt: new Date().toISOString()
                 };
                 setMessages(prev => [...prev, aiMessage]);
+                setPendingMessageId(result.data.messageId);
             } else {
                 // Show error message
                 const errorMessage = {
