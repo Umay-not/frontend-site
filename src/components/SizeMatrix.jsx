@@ -5,6 +5,9 @@ const SizeMatrix = ({ sizes, seriesCount, onQuantityChange }) => {
     const [quantities, setQuantities] = useState({});
     const [totalQuantity, setTotalQuantity] = useState(0);
 
+    // Check if this is a standard size product
+    const isStandardSize = sizes.length === 1 && sizes[0] === 'Standart';
+
     // Initialize quantities
     useEffect(() => {
         const initial = {};
@@ -46,17 +49,22 @@ const SizeMatrix = ({ sizes, seriesCount, onQuantityChange }) => {
     };
 
     const fillSeries = () => {
-        // Standard series distribution (e.g., S:2, M:3, L:3, XL:2)
-        const distribution = {
-            'S': 2, 'M': 3, 'L': 3, 'XL': 2,
-            'XS': 1, '2XL': 1, '3XL': 1
-        };
+        if (isStandardSize) {
+            // For standard size, fill with series count
+            setQuantities({ 'Standart': seriesCount || 10 });
+        } else {
+            // Standard series distribution (e.g., S:2, M:3, L:3, XL:2)
+            const distribution = {
+                'S': 2, 'M': 3, 'L': 3, 'XL': 2,
+                'XS': 1, '2XL': 1, '3XL': 1, 'XXL': 1
+            };
 
-        const newQuantities = {};
-        sizes.forEach(size => {
-            newQuantities[size] = distribution[size] || 2;
-        });
-        setQuantities(newQuantities);
+            const newQuantities = {};
+            sizes.forEach(size => {
+                newQuantities[size] = distribution[size] || 2;
+            });
+            setQuantities(newQuantities);
+        }
     };
 
     const clearAll = () => {
@@ -67,6 +75,79 @@ const SizeMatrix = ({ sizes, seriesCount, onQuantityChange }) => {
         setQuantities(cleared);
     };
 
+    // Simplified UI for standard size
+    if (isStandardSize) {
+        return (
+            <div className="size-matrix size-matrix--standard">
+                <div className="size-matrix__header">
+                    <h3 className="size-matrix__title">Adet Seçimi</h3>
+                    <span className="size-matrix__standard-badge">Standart Beden</span>
+                </div>
+
+                <div className="size-matrix__standard-input">
+                    <div className="size-matrix__input-group size-matrix__input-group--large">
+                        <button
+                            type="button"
+                            className="size-matrix__btn size-matrix__btn--large"
+                            onClick={() => decrement('Standart')}
+                        >
+                            −
+                        </button>
+                        <input
+                            type="text"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            value={quantities['Standart'] || ''}
+                            onChange={(e) => {
+                                const val = e.target.value.replace(/^0+/, '').replace(/\D/g, '');
+                                handleQuantityChange('Standart', val);
+                            }}
+                            onBlur={(e) => {
+                                if (e.target.value === '') {
+                                    handleQuantityChange('Standart', 0);
+                                }
+                            }}
+                            placeholder="0"
+                            className="size-matrix__input size-matrix__input--large"
+                        />
+                        <button
+                            type="button"
+                            className="size-matrix__btn size-matrix__btn--large"
+                            onClick={() => increment('Standart')}
+                        >
+                            +
+                        </button>
+                    </div>
+                </div>
+
+                <div className="size-matrix__actions" style={{ marginTop: '1rem' }}>
+                    <button
+                        type="button"
+                        className="size-matrix__action-btn"
+                        onClick={fillSeries}
+                    >
+                        Seri Doldur ({seriesCount || 10} adet)
+                    </button>
+                    <button
+                        type="button"
+                        className="size-matrix__action-btn size-matrix__action-btn--clear"
+                        onClick={clearAll}
+                    >
+                        Temizle
+                    </button>
+                </div>
+
+                <div className="size-matrix__summary">
+                    <div className="size-matrix__total">
+                        <span className="size-matrix__total-label">Toplam Adet:</span>
+                        <span className="size-matrix__total-value">{totalQuantity}</span>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Regular size grid UI
     return (
         <div className="size-matrix">
             <div className="size-matrix__header">
@@ -146,3 +227,4 @@ const SizeMatrix = ({ sizes, seriesCount, onQuantityChange }) => {
 };
 
 export default SizeMatrix;
+

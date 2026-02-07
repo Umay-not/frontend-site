@@ -154,3 +154,41 @@
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* Standard Size Styles */
+.size-matrix--standard .size-matrix__header {
+    margin-bottom: var(--spacing-md);
+}
+
+.size-matrix__standard-badge {
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    border-radius: var(--radius-sm);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.size-matrix__standard-input {
+    display: flex;
+    justify-content: center;
+    padding: var(--spacing-lg) 0;
+}
+
+.size-matrix__input-group--large {
+    transform: scale(1.2);
+}
+
+.size-matrix__btn--large {
+    width: 44px;
+    height: 48px;
+    font-size: var(--font-size-xl);
+}
+
+.size-matrix__input--large {
+    width: 70px;
+    height: 48px;
+    font-size: var(--font-size-lg);
+}
